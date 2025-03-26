@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stopwatch</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 50px;
+        }
+        .stopwatch {
+            font-size: 2em;
+            margin-bottom: 20px;
+        }
+        button {
+            font-size: 1em;
+            margin: 5px;
+            padding: 10px;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>Stopwatch</h1>
+    <div class="stopwatch">00:00:00</div>
+    <button onclick="startStopwatch()">Start</button>
+    <button onclick="pauseStopwatch()">Pause</button>
+    <button onclick="resetStopwatch()">Reset</button>
+    <button onclick="recordLap()">Lap</button>
+    <ul id="laps"></ul>
+
+    <script>
+        let timer;
+        let isRunning = false;
+        let seconds = 0, minutes = 0, hours = 0;
+
+        function updateDisplay() {
+            document.querySelector(".stopwatch").innerText = 
+                `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+        }
+
+        function startStopwatch() {
+            if (!isRunning) {
+                isRunning = true;
+                timer = setInterval(() => {
+                    seconds++;
+                    if (seconds === 60) {
+                        seconds = 0;
+                        minutes++;
+                        if (minutes === 60) {
+                            minutes = 0;
+                            hours++;
+                        }
+                    }
+                    updateDisplay();
+                }, 1000);
+            }
+        }
+
+        function pauseStopwatch() {
+            clearInterval(timer);
+            isRunning = false;
+        }
+
+        function resetStopwatch() {
+            clearInterval(timer);
+            isRunning = false;
+            seconds = 0;
+            minutes = 0;
+            hours = 0;
+            updateDisplay();
+            document.getElementById("laps").innerHTML = "";
+        }
+
+        function recordLap() {
+            if (isRunning) {
+                const lapTime = document.createElement("li");
+                lapTime.innerText = document.querySelector(".stopwatch").innerText;
+                document.getElementById("laps").appendChild(lapTime);
+            }
+        }
+    </script>
+</body>
+</html>
